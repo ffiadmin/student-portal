@@ -46,11 +46,5 @@
 			links.children('li.active').removeClass('active');
 			links.children('li').eq(index).addClass('active');
 		});
-		
-	//Initialize the jQuery Twitter plugin
-		$('article.twitter-post').tweet({
-			'count' : 1,
-			'username' : 'sgaatgcc'
-		});
 	});
 })(jQuery)

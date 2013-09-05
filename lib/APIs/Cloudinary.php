@@ -7,7 +7,7 @@
  * include:
  *  - Obtain the name of the Cloudinary cloud name from the 
  *    API table in the database.
- *  - Generate the URL to a person's profile image stored.
+ *  - Generate the URL to an image on Cloudinary.
  *
  * @author    Oliver Spryn
  * @copyright Copyright (c) 2013 and Onwards, ForwardFour Innovations
@@ -20,7 +20,6 @@
 namespace FFI\SP;
 
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . "/wp-blog-header.php");
-require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . "/wp-includes/link-template.php");
 
 class Cloudinary {
 /**
@@ -65,6 +64,38 @@ class Cloudinary {
 		self::getCloudName();
 
 		return "//cloudinary-a.akamaihd.net/" . self::$cloudName . "/image/upload/e_saturation:-70,h_220,w_175/" . $imageKey;
+	}
+	
+/**
+ * Generate the URL to the splash screen's background image.
+ * 
+ * @access public
+ * @param  string   $imageKey The key of the image to fetch from Cloudinary
+ * @return string             The URL of the image with the supplied key
+ * @static
+ * @since  3.0
+*/
+
+	public static function background($imageKey) {
+		self::getCloudName();
+
+		return "//cloudinary-a.akamaihd.net/" . self::$cloudName . "/image/upload/h_500,w_2000/" . $imageKey;
+	}
+	
+/**
+ * Generate the URL to the splash screen's jewel icon.
+ * 
+ * @access public
+ * @param  string   $imageKey The key of the image to fetch from Cloudinary
+ * @return string             The URL of the image with the supplied key
+ * @static
+ * @since  3.0
+*/
+
+	public static function icon($imageKey) {
+		self::getCloudName();
+
+		return "//cloudinary-a.akamaihd.net/" . self::$cloudName . "/image/upload/w_48/" . $imageKey;
 	}
 }
 ?>

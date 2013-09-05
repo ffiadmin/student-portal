@@ -180,7 +180,6 @@ section#splash div.button button:active {
 
 section#splash ul.jewels {
 	background-color: #F5F5F5;
-	border-bottom: 1px solid #DDDDDD;
 	height: 100px;
 	list-style: none;
 	margin: 0px;
@@ -271,7 +270,7 @@ section#splash ul.jewels li.active {
         display: block;
         font-size: 30px;
         height: 30px;
-        line-height: 1;
+        line-height: 0.83;
         position: absolute;
         text-align: center;
         top: 47%;
@@ -375,6 +374,74 @@ section#splash ul.jewels li.active {
 }
 
 /**
+ * Content area styles
+ * ----------------------------------
+*/
+
+article.content, section.content {
+	background: #FFFFFF;
+	border-top: 1px solid #DDDDDD;
+	padding: 65px 10% 65px 10%;
+}
+
+article.content.even, section.content.even, article.content.no-splash, section.content.no-splash {
+	background: #F5F5F5;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+article.content.no-border, section.content.no-border, article.content.no-border, section.content.no-border {
+	border-bottom: none;
+	border-top: none;
+}
+
+article.content > h1, section.content > h1, article.content > h2, section.content > h2, article.content header h1, section.content header h1, article.content header h2, section.content header h2 {
+	color: #303030;
+	font-size: 24px !important;
+	font-weight: lighter;
+	line-height: normal !important;
+	margin: 0px 0px 20px 0px;
+	padding-bottom: 10px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+article.content > h1::after, section.content > h1::after, article.content > h2::after, section.content > h2::after, article.content header h1::after, section.content header h1::after, article.content header h2::after, section.content header h2::after {
+	border-top: 2px solid #303030;
+	content: ' ';
+	display: block;
+	margin: 7px auto 0px auto;
+	padding: 0px;
+	text-align: center;
+	width: 300px;
+}
+
+article.content p, section.content p {
+	color: #777777;
+	font-size: 15px;
+	margin: 10px 0px 10px 0px;
+}
+
+article.content > h3, section.content > h3 {
+	padding-top: 40px;
+}
+
+article.content.center p, section.content.center p {
+	margin: 15px auto 15px auto;
+	max-width: 850px;
+	text-align: center;
+}
+
+@media screen and (max-width: 650px) {
+	article.content, section.content {
+		padding: 15px 10% 15px 10%;
+	}
+    
+	article.content > h1::after, section.content > h1::after, article.content > h2::after, section.content > h2::after, article.content header h1::after, section.content header h1::after, article.content header h2::after, section.content header h2::after {
+		content: none;
+    	}
+}
+
+/**
  * Social networking
  * ----------------------------------
 */
@@ -382,7 +449,8 @@ section#splash ul.jewels li.active {
 article#social article.twitter-post {
 	background: url(sprites/icons.png) #F5F5F5 no-repeat 23px -246px;
 	border: 1px solid #DDDDDD;
-	margin-top: 30px; 
+	margin-top: 30px;
+	min-height: 52px;
 	padding: 30px 30px 30px 70px;
 }
 
@@ -394,12 +462,8 @@ article#social article.twitter-post p {
 	color: #000000;
 }
 
-article#social article.twitter-post ul {
-	list-style: none;
-}
-
 article#social div.wrapper {
-	padding: 30px 0px 30px 0px;
+	padding: 30px 0px 0px 0px;
 }
 
 article#social div.wrapper a.page {
@@ -452,10 +516,6 @@ article#calendar {
     position: relative;
 }
 
-article#calendar h2 {
-    padding-bottom: 40px;
-}
-
 article#calendar ul.event-details {
     margin: 0px;
     padding: 0px;
@@ -467,6 +527,7 @@ article#calendar ul.event-details li {
     list-style: none;
     margin: 0px;
     padding: 0px;
+	vertical-align: top;
 }
 
 article#calendar ul.event-details li.active {
@@ -524,11 +585,16 @@ article#calendar ul.event-list li {
     transition: all .25s ease-in-out;
 	
 	background: #FBFBFB;
-	border: 1px solid #DDDDDD;
+	border: 1px dashed #AAAAAA;
+	border-radius: 100%;
 	cursor: pointer;
 	display: inline-block;
+	height: 110px;
 	margin: 5px;
-	width: 200px;
+	min-width: 100px;
+	padding: 0px 7px;
+	position: relative;
+	width: 100px;
 }
 
 article#calendar ul.event-list li.active, article#calendar ul.event-list li:hover {
@@ -536,9 +602,9 @@ article#calendar ul.event-list li.active, article#calendar ul.event-list li:hove
 }
 
 article#calendar ul.event-list li p {
+	color: #777777;
 	font-size: 13px;
 	font-weight: bolder;
-	text-transform: uppercase;
 }
 
 article#calendar ul.event-list li time {
@@ -548,10 +614,16 @@ article#calendar ul.event-list li time {
 	-webkit-transition: all .25s ease-in-out;
     transition: all .25s ease-in-out;
 	
+	bottom: 15px;
 	display: block;
 	font-size: 12px;
-	padding-bottom: 15px;
+	position: absolute;
 	text-align: center;
+	width: 100px;
+}
+
+article#calendar ul.event-list li.active p {
+	color: #CCCCCC;
 }
 
 article#calendar ul.event-list li.active time, article#calendar ul.event-list li:hover time {
@@ -562,8 +634,14 @@ article#calendar span.nav {
 	display: none;
 }
 
+article#calendar div.none {
+	height: 80px;
+	padding-top: 20px;
+}
+
 @media screen and (max-width: 980px) {
 	article#calendar ul.event-list li {
+		min-width: inherit;
 		padding: 0px 15px 0px 15px;
 		width: auto;
 	}
@@ -576,6 +654,10 @@ article#calendar span.nav {
 @media screen and (max-width: 650px) {
     article#calendar {
         padding-bottom: 75px;
+    }
+	
+	article#calendar.no-space {
+        padding-bottom: 15px;
     }
     
     article#calendar ul.event-list {
@@ -611,7 +693,7 @@ article#calendar span.nav {
         display: block;
         font-size: 30px;
         height: 30px;
-        line-height: 1;
+        line-height: 0.83;
         position: absolute;
         text-align: center;
         width: 30px;
@@ -728,6 +810,7 @@ article#links ul li p {
 }
 
 article#links ul li p.category {
+	color: #999999;
     font-size: 11px;
     margin: 0px;
     padding-top: 110px;
@@ -736,17 +819,21 @@ article#links ul li p.category {
 }
 
 article#links ul li p.title {
-    font-size: 18px;
-    padding-top: 3px;
+	font-size: 15px;
+	font-weight: bolder;
+	letter-spacing: 1px;
+	line-height: normal;
+	margin: 0px;
+	padding-top: 3px;
 }
 
 article#links ul li p.link {
-    background: url(sprites/icons.png) no-repeat -19px 2px;
+    background: url(sprites/icons.png) no-repeat -19px 7px;
     font-size: 11px;
     margin-top: 24px;
     max-width: 255px;
     overflow: hidden;
-    padding: 5px 15px 5px 30px;
+    padding: 10px 15px 5px 30px;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 255px;
@@ -767,7 +854,7 @@ article#links ul li p.link {
     }
     
     article#links ul li.cafeteria-menu {
-        background-position: 0px -200px;
+        background-position: 0px -224px;
     }
     
     article#links ul li.academic-calendar {
@@ -775,39 +862,39 @@ article#links ul li p.link {
     }
     
     article#links ul li.organizations {
-        background-position: 0px -800px;
+        background-position: 0px -895px;
     }
     
     article#links ul li.organization-websites {
-        background-position: 0px -900px;
+        background-position: 0px -1008px;
     }
     
     article#links ul li.student-directory {
-        background-position: 0px -1000px;
+        background-position: 0px -1120px;
     }
     
     article#links ul li.campus-contact {
-        background-position: 0px -300px;
+        background-position: 0px -336px;
     }
     
     article#links ul li.office-hours {
-        background-position: 0px -700px;
+        background-position: 0px -784px;
     }
     
     article#links ul li.building-hours {
-        background-position: 0px -100px;
+        background-position: 0px -112px;
     }
     
     article#links ul li.department-websites {
-        background-position: 0px -600px;
+        background-position: 0px -672px;
     }
     
     article#links ul li.chapel-schedule {
-        background-position: 0px -400px;
+        background-position: 0px -560px;
     }
     
     article#links ul li.chapel-recordings {
-        background-position: 0px -500px;
+        background-position: 0px -448px;
     }
     
     article#links ul li p.category {
@@ -827,6 +914,49 @@ article#links ul li p.link {
         display: none;
     }
 }
+
+@media screen and (max-width: 815px) {
+	article#links ul li {
+		border-left: none;
+		border-right: none;
+		border-top: none;
+		margin-left: 0px;
+		margin-right: 0px;
+		padding-bottom: 12px;
+		width: 100%;
+	}
+	
+	article#links ul li:hover {
+		border-bottom: 1px solid #E4E4E4;
+		border-left: none;
+		border-right: none;
+		border-top: none;
+	}
+	
+	article#links ul li:last-child {
+		border-bottom: none;
+	}
+	
+	article#links ul li p.category {
+		padding-top: 0px;
+	}
+	
+	article#links ul li p.title {
+		color: #222222;
+		top: 18px;
+	}
+	
+	article#links ul li p.link {
+        display: block;
+		left: 130px;
+		max-width: inherit;
+		position: absolute;
+		right: 0px;
+		top: 47px;
+		width: auto;
+    }
+}
+
 
 /**
  * About us
@@ -859,7 +989,7 @@ article#about article.snapshot ul li:last-child {
 
 article#about article.snapshot ul li h4 {
 	font-size: 68px;
-	font-weight: normal;
+	font-weight: 300;
 	margin: 0px;
 }
 
@@ -936,18 +1066,24 @@ article#about ul.people li div span.position {
 }
 
 @media screen and (max-width: 650px) {
+	article#about header {
+		padding-bottom: 20px;
+	}
+	
     article#about h3 {
         padding: 0px;
     }    
         
     article#about ul.people li {
+		border-bottom: 1px solid #E4E4E4;
         display: inline-block;
-        padding-right: 0px;
-        width: 250px;
+        padding: 7px 0px 7px 0px;
+        width: 100%;
     }
     
     article#about ul.people li:last-child {
-        padding: 0px;
+		border-bottom: none;
+        padding: 7px 0px 0px 0px;
     }
     
     article#about ul.people li img {
@@ -989,17 +1125,24 @@ article#about ul.people li div span.position {
         text-align: left;
         width: auto;
     }
-    
-    article#about ul.people li div span.name {
-        display: block;
-        padding: 0px;
-    }
-    
-    article#about ul.people li div span.position {
-        bottom: auto;
-        height: auto;
-        font-size: 12px;
-        padding: 25px 0px 0px 0px;
+	
+	article#about ul.people li div span.name {
+		display: block;
+		font-size: 15px;
+		font-weight: bolder;
+		letter-spacing: 1px;
+		line-height: normal;
+		margin: 0px;
+		padding: 0px;
+		top: 0px;
+	}
+	
+	article#about ul.people li div span.position {
+		bottom: auto;
+		color: #999999;
+		font-size: 11px;
+		height: auto;
+		padding: 25px 0px 0px 0px;
         top: 0px;
-    }
+	}
 }

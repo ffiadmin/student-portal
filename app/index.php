@@ -4,6 +4,7 @@
 	$essentials->includeJS("//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js");
 	$essentials->includeJS("scripts/main.superpackage.min.js");
 	$essentials->includePluginClass("APIs/Cloudinary");
+	$essentials->includePluginClass("third-party/TwitterAPIExchange");
 	
 //Render the splash section of the page
 	$count = 0;
@@ -55,11 +56,17 @@
 	echo "</ul>
 </div>
 </div>
-    
-<span class=\"nav left\">&#171;</span>
+
+";
+
+	if (count($splash) > 1) {
+		echo "<span class=\"nav left\">&#171;</span>
 <span class=\"nav right\">&#187;</span>
 
-<div class=\"button\">
+";
+	}
+	
+	echo "<div class=\"button\">
 <button>Show More</button>
 </div>
 
@@ -70,7 +77,7 @@
 		++$count;
 		
 		echo "
-<li" . ($count == 1 ? " class=\"active\"" : "") . " data-background=\"" . htmlentities($item->BackgroundURL) . "\" style=\"background-image: url(" . htmlentities($item->IconURL) . ");\">Book Exchange</li>
+<li" . ($count == 1 ? " class=\"active\"" : "") . " data-background=\"" . htmlentities(FFI\SP\Cloudinary::background($item->BackgroundID)) . "\" style=\"background-image: url(" . htmlentities(FFI\SP\Cloudinary::icon($item->IconID)) . ");\">" . $item->Title . "</li>
 ";
 	}
 	
@@ -80,6 +87,18 @@
 ";
 
 //Render the social media section of the page
+	$APIs = $wpdb->get_results("SELECT * FROM `ffi_sp_apis`");
+	$getField = "?screen_name=" . $APIs[0]->TwitterUsername . "&count=1";
+	$requestMethod = "GET";
+	$URL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
+	
+	$settings = array(
+		"oauth_access_token"        => $APIs[0]->TwitterAccessToken,
+		"oauth_access_token_secret" => $APIs[0]->TwitterAccessTokenSecret,
+		"consumer_key"              => $APIs[0]->TwitterConsumerKey,
+		"consumer_secret"           => $APIs[0]->TwitterConsumerSecret
+	);
+
 	echo "<article class=\"center content\" id=\"social\">
 <header>
 <h2>On campus, Twitter, and Facebook</h2>
@@ -88,7 +107,17 @@
 
 <article class=\"twitter-post\">
 <h3>Recent Twitter Posts</h3>
-<p>Nothing to display...</p>
+";
+
+	try {
+		$twitter = new TwitterAPIExchange($settings);
+		$data = $twitter->setGetfield($getField)->buildOauth($URL, $requestMethod)->performRequest();
+		echo "<p>" . $data[0]->text . "</p>";
+	} catch (Exception $e) {
+		echo "<p>Nothing to display...</p>";
+	}
+
+echo "
 </article>
 
 <div class=\"center wrapper\">
@@ -103,19 +132,23 @@
 	$count = 0;
 	$events = $wpdb->get_results("SELECT * FROM `ffi_sp_events` WHERE `Time` > NOW() ORDER BY `Time` ASC");
 	$formatter = new DateTime();
+	$total = count($events);
 
-	echo "<article class=\"center content even\" id=\"calendar\">
+	echo "<article class=\"center content even" . ($total < 2 ? " no-space" : "") . "\" id=\"calendar\">
 <header>
 <h2>SGA Calendar &amp; Events</h2>
 </header>
 
-<ul class=\"event-details\">";
+";
 
-	foreach ($events as $item) {
-		++$count;
-		$formatter = DateTime::createFromFormat("Y-m-d H:i:s", $item->Time);
+	if ($total > 1) {
+		echo "<ul class=\"event-details\">";
+
+		foreach ($events as $item) {
+			++$count;
+			$formatter = DateTime::createFromFormat("Y-m-d H:i:s", $item->Time);
 		
-		echo "
+			echo "
 <li" . ($count == 1 ? " class=\"active\"" : "") . ">
 <h3>" . $item->Title . "</h3>
 <ul class=\"event-overview\">
@@ -125,30 +158,39 @@
 </ul>
 
 " . $item->Description . "
-";
-	}
-	
-	$count = 0;
-
-	echo "</ul>
-	
-<ul class=\"event-list\">";
-
-	foreach ($events as $item) {
-		++$count;
-		
-		echo "
-<li" . ($count == 1 ? " class=\"active\"" : "") . ">
-<p>" . $item->Title . "</p>
-<time datetime=\"" . substr($item->Time, 0, -9) . "\">" . $formatter->format("F jS, Y") . "</time>	
 </li>
 ";
-	}
-
-	echo "</ul>
+		}
+		
+		echo "</ul>
+";
 	
+		$count = 0;
+
+		echo "
+<ul class=\"event-list\">";
+		
+		foreach ($events as $item) {
+			++$count;
+			$formatter = DateTime::createFromFormat("Y-m-d H:i:s", $item->Time);
+		
+			echo "
+<li" . ($count == 1 ? " class=\"active\"" : "") . ">
+<p>" . $item->Title . "</p>
+<time datetime=\"" . substr($item->Time, 0, -9) . "\">" . $formatter->format("M. jS") . "</time>	
+</li>
+";
+		}
+		
+		echo "</ul>
+
 <span class=\"nav left\">&#171;</span>
-<span class=\"nav right\">&#187;</span>
+<span class=\"nav right\">&#187;</span>";
+	} else {
+		echo "<div class=\"none\"><p>Nothing amazing here right now. Try back later.</p></div>";
+	}
+	
+	echo "
 </article>
 
 ";
@@ -156,7 +198,7 @@
 //Render the help campus websites section of the page
 	$links = $wpdb->get_results("SELECT * FROM `ffi_sp_links`");
 
-	echo "<article class=\"center content\" id=\"links\">
+	echo "<article class=\"center content no-border\" id=\"links\">
 <header>
 <h2>Helpful Campus Websites</h2>
 </header>
@@ -295,19 +337,20 @@
 </article>
 ";
 
-	foreach($people as $person) {
-		if ($person->Committee != $committee) {
-			if ($committee != "") {
-				echo "</ul>
+	if ($total) {
+		foreach($people as $person) {
+			if ($person->Committee != $committee) {
+				if ($committee != "") {
+					echo "</ul>
 ";
-			}
+				}
 			
-			echo "
+				echo "
 <h3>" . $person->Committee . "</h3>
 <ul class=\"people\">";
-		}
+			}
 		
-		echo "
+			echo "
 <li>
 <img alt=\"" . htmlentities($person->Name) . "\" src=\"" . FFI\SP\Cloudinary::profile($person->ImageID) . "\">
 <div>
@@ -317,12 +360,13 @@
 </li>
 ";
 
-		$committee = $person->Committee;
-	}
+			$committee = $person->Committee;
+		}
 	
-	if ($committee != "") {
-		echo "</ul>
+		if ($committee != "") {
+			echo "</ul>
 ";
+		}
 	}
 	
 	echo "</article>";
