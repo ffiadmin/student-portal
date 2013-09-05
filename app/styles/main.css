@@ -451,15 +451,23 @@ article#social article.twitter-post {
 	border: 1px solid #DDDDDD;
 	margin-top: 30px;
 	min-height: 52px;
-	padding: 30px 30px 30px 70px;
+	padding: 30px 30px 30px 115px;
 }
 
 article#social article.twitter-post h3 {
 	display: none;
 }
 
+article#social article.twitter-post h4 {
+	font-size: 14px;
+	margin-top: 0px;
+	text-decoration: underline;
+}
+
 article#social article.twitter-post p {
 	color: #000000;
+	margin: 0px;
+	text-align: left;
 }
 
 article#social div.wrapper {
@@ -500,11 +508,14 @@ article#social div.wrapper a.page.twitter:hover {
         background: url(sprites/icons.png) #F5F5F5 no-repeat center -563px;
         padding: 55px 30px 30px 30px;
     }
-    
-    article#social article.twitter-post ul {
-        margin: 0px;
-        padding: 0px;
-    }
+	
+	article#social article.twitter-post h4 {
+		text-align: center;
+	}
+	
+	article#social article.twitter-post p {
+		text-align: center;
+	}
 }
 
 /**
@@ -597,7 +608,11 @@ article#calendar ul.event-list li {
 	width: 100px;
 }
 
-article#calendar ul.event-list li.active, article#calendar ul.event-list li:hover {
+article#calendar ul.event-list li:hover {
+	background: #909090;
+}
+
+article#calendar ul.event-list li.active {
 	background: #303030;
 }
 
@@ -622,7 +637,7 @@ article#calendar ul.event-list li time {
 	width: 100px;
 }
 
-article#calendar ul.event-list li.active p {
+article#calendar ul.event-list li.active p, article#calendar ul.event-list li:hover p {
 	color: #CCCCCC;
 }
 
@@ -641,6 +656,9 @@ article#calendar div.none {
 
 @media screen and (max-width: 980px) {
 	article#calendar ul.event-list li {
+		border: 1px solid #DDDDDD;
+		border-radius: 0px;
+		height: 50px;
 		min-width: inherit;
 		padding: 0px 15px 0px 15px;
 		width: auto;
@@ -837,6 +855,12 @@ article#links ul li p.link {
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 255px;
+}
+
+article#links p.credits {
+	font-size: 10px;
+	margin: 0px;
+	text-align: left;
 }
 
 @media screen and (max-width: 980px) {

@@ -1,6 +1,6 @@
 <?php
 //Include the necessary scripts
-	$essentials->includeCSS("styles/main.css");
+	$essentials->includeCSS("styles/main.min.css");
 	$essentials->includeJS("//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js");
 	$essentials->includeJS("scripts/main.superpackage.min.js");
 	$essentials->includePluginClass("APIs/Cloudinary");
@@ -111,8 +111,14 @@
 
 	try {
 		$twitter = new TwitterAPIExchange($settings);
-		$data = $twitter->setGetfield($getField)->buildOauth($URL, $requestMethod)->performRequest();
-		echo "<p>" . $data[0]->text . "</p>";
+		$data = json_decode($twitter->setGetfield($getField)->buildOauth($URL, $requestMethod)->performRequest());
+		
+		$timezone = $wpdb->get_results("SELECT * FROM `ffi_sp_settings`");
+		$formatter = DateTime::createFromFormat("D M d G:i:s O Y", $data[0]->created_at);
+		$formatter->setTimezone(new DateTimeZone($timezone[0]->TimeZone));
+		
+		echo "<h4>Tweeted on <time datetime=\"" . $formatter->format("Y-m-d H:i:s") . "\">" . $formatter->format("F jS, Y \a\\t g:i A") . "</time></h4>
+<p>" . $data[0]->text . "</p>";
 	} catch (Exception $e) {
 		echo "<p>Nothing to display...</p>";
 	}
@@ -141,7 +147,7 @@ echo "
 
 ";
 
-	if ($total > 1) {
+	if ($total > 0) {
 		echo "<ul class=\"event-details\">";
 
 		foreach ($events as $item) {
@@ -162,30 +168,32 @@ echo "
 ";
 		}
 		
-		echo "</ul>
-";
+		echo "</ul>";
 	
 		$count = 0;
 
-		echo "
+		if ($total > 1) {
+			echo "
+
 <ul class=\"event-list\">";
 		
-		foreach ($events as $item) {
-			++$count;
-			$formatter = DateTime::createFromFormat("Y-m-d H:i:s", $item->Time);
+			foreach ($events as $item) {
+				++$count;
+				$formatter = DateTime::createFromFormat("Y-m-d H:i:s", $item->Time);
 		
-			echo "
+				echo "
 <li" . ($count == 1 ? " class=\"active\"" : "") . ">
 <p>" . $item->Title . "</p>
 <time datetime=\"" . substr($item->Time, 0, -9) . "\">" . $formatter->format("M. jS") . "</time>	
 </li>
 ";
-		}
+			}
 		
-		echo "</ul>
+			echo "</ul>
 
 <span class=\"nav left\">&#171;</span>
 <span class=\"nav right\">&#187;</span>";
+		}
 	} else {
 		echo "<div class=\"none\"><p>Nothing amazing here right now. Try back later.</p></div>";
 	}
@@ -299,6 +307,8 @@ echo "
 </a>
 </li>
 </ul>
+
+<p class=\"credits\">GCC Men's Rugby and group of students photos taken by <a href=\"http://www2.gcc.edu/student/view/archive1.htm\" target=\"_blank\">Corey Furman</a></p>
 </article>
 
 ";
